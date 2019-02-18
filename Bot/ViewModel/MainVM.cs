@@ -16,7 +16,11 @@ namespace Bot.ViewModel
             set;
         }
 
-        public ObservableCollection<ChatMessage> Messages;
+        public ObservableCollection<ChatMessage> Messages
+        {
+            get;
+            set;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
