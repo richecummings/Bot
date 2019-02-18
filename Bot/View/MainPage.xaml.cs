@@ -15,11 +15,11 @@ namespace Bot.View
         {
             base.OnAppearing();
 
-            using (var cts = new CancellationTokenSource())
-            {
-                var config = await ConfigurationManager.Instance.GetAsync(cts.Token);
-                webView.Source = $"{config.WebChatURL}?s={config.WebChatSecretKey}";
-            }
+            //using (var cts = new CancellationTokenSource())
+            //{
+            //    var config = await ConfigurationManager.Instance.GetAsync(cts.Token);
+            //    webView.Source = $"{config.WebChatURL}?s={config.WebChatSecretKey}";
+            //}
         }
     }
 }
