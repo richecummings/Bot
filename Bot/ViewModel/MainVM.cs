@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Bot.ViewModel.Helpers;
 using Xamarin.Forms;
@@ -14,6 +15,8 @@ namespace Bot.ViewModel
             get;
             set;
         }
+
+        public ObservableCollection<ChatMessage> Messages;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,16 +36,60 @@ namespace Bot.ViewModel
         {
             botHelper = new BotServiceHelper();
             SendCommand = new Command(SendActivity);
+            Messages = new ObservableCollection<ChatMessage>();
+
+            botHelper.MessageReceived += BotHelper_MessageReceived;
         }
 
         void SendActivity()
         {
+            Messages.Add(new ChatMessage
+            {
+                Text = Message,
+                IsIncoming = false
+            });
             botHelper.SendActivity(Message);
+        }
+
+        void BotHelper_MessageReceived(object sender, BotServiceHelper.BotResponseEventArgs e)
+        {
+            foreach (var activity in e.Activities)
+            {
+                if (activity.From.Id != "user1")
+                {
+                    Messages.Add(new ChatMessage
+                    {
+                        Text = activity.Text,
+                        IsIncoming = true
+                    });
+                }
+            }
         }
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public class ChatMessage
+        {
+            public string Id
+            {
+                get;
+                set;
+            }
+
+            public string Text
+            {
+                get;
+                set;
+            }
+
+            public bool IsIncoming
+            {
+                get;
+                set;
+            }
         }
     }
 }

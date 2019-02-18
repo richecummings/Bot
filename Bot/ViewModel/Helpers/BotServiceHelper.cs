@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.WebSockets;
@@ -22,6 +23,8 @@ namespace Bot.ViewModel.Helpers
         {
             Run();
         }
+
+        public event EventHandler<BotResponseEventArgs> MessageReceived;
 
         private async void CreateConversation()
         {
@@ -106,10 +109,41 @@ namespace Bot.ViewModel.Helpers
                             break;
                         var messageBytes = message.Skip(message.Offset).Take(result.Count).ToArray();
                         string messageJSON = Encoding.UTF8.GetString(messageBytes);
+
+                        BotsResponse botsResponse = JsonConvert.DeserializeObject<BotsResponse>(messageJSON);
+
+                        var args = new BotResponseEventArgs();
+                        args.Activities = botsResponse.Activities;
+
+                        MessageReceived?.Invoke(this, args);
                     }
                     while (!result.EndOfMessage);
                 }
             }, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
+        public class BotResponseEventArgs : EventArgs
+        {
+            public List<Activity> Activities
+            {
+                get;
+                set;
+            }
+        }
+
+        public class BotsResponse
+        {
+            public string Watermark 
+            {
+                get; 
+                set; 
+            }  
+
+            public List<Activity> Activities
+            {
+                get;
+                set;
+            }
         }
 
         public class ChannelAccount
