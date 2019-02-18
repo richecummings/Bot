@@ -53,6 +53,7 @@ namespace Bot.ViewModel
                 IsIncoming = false
             });
             botHelper.SendActivity(Message);
+            Message = string.Empty;
         }
 
         void BotHelper_MessageReceived(object sender, BotServiceHelper.BotResponseEventArgs e)

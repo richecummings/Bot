@@ -1,25 +1,29 @@
 using System.Threading;
 using Bot.Configuration;
+using Bot.ViewModel;
 using Xamarin.Forms;
 
 namespace Bot.View
 {
     public partial class MainPage : ContentPage
     {
+        MainVM viewModel;
         public MainPage()
         {
             InitializeComponent();
+
+            viewModel = Resources["vm"] as MainVM;
+
+            viewModel.Messages.CollectionChanged += Messages_CollectionChanged;
         }
 
-        protected override async void OnAppearing()
+        void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            base.OnAppearing();
-
-            //using (var cts = new CancellationTokenSource())
-            //{
-            //    var config = await ConfigurationManager.Instance.GetAsync(cts.Token);
-            //    webView.Source = $"{config.WebChatURL}?s={config.WebChatSecretKey}";
-            //}
+            var newMessage = viewModel.Messages[viewModel.Messages.Count - 1];
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                chatListView.ScrollTo(newMessage, ScrollToPosition.End, true);
+            });
         }
     }
 }

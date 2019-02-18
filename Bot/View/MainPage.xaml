@@ -17,7 +17,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ListView Grid.Row="0"
+            <ListView x:Name="chatListView"
+                      Grid.Row="0"
                       ItemTemplate="{StaticResource chatTemplateSelector}"
                       ItemsSource="{Binding Messages}"
                       HasUnevenRows="true"
