@@ -22,5 +22,7 @@
   <ItemGroup>
     <Folder Include="View\" />
     <Folder Include="Configuration\" />
+    <Folder Include="ViewModel\" />
+    <Folder Include="ViewModel\Helpers\" />
   </ItemGroup>
 </Project>
